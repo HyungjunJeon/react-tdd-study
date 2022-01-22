@@ -1,6 +1,7 @@
 export default class HabitPresenter {
-  constructor(habits) {
+  constructor(habits, maxHabits) {
     this.habits = habits
+    this.maxHabits = maxHabits
   }
 
   getHabits() {
@@ -20,7 +21,7 @@ export default class HabitPresenter {
   decrement(habit, update) {
     this.habits = this.habits.map((item) => {
       if (item.id === habit.id) {
-        const count = habit.count - 1
+        const count = item.count - 1
         return { ...habit, count: count < 0 ? 0 : count }
       }
       return item
@@ -34,6 +35,9 @@ export default class HabitPresenter {
   }
 
   add(name, update) {
+    if (this.habits.length === this.maxHabits) {
+      throw new Error(`Habits count cannot be over than ${this.maxHabits}`)
+    }
     this.habits = [...this.habits, { id: Date.now(), name, count: 0 }]
     update(this.habits)
   }
